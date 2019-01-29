@@ -14,6 +14,8 @@ func (agr Aggregator) getNewsHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println("error while getting all news", err)
 		return
 	}
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(news)
 }
@@ -25,6 +27,8 @@ func (agr Aggregator) searchNewsHandler(w http.ResponseWriter, r *http.Request) 
 		log.Println("error while searching news", err)
 		return
 	}
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(news)
 }
