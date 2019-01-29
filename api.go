@@ -8,18 +8,30 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var news []News
-
-func getNews(w http.ResponseWriter, r *http.Request) {
+func (agr Aggregator) getNewsHandler(w http.ResponseWriter, r *http.Request) {
+	news, err := agr.getAllNews()
+	if err != nil {
+		log.Println("error while getting all news", err)
+		return
+	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(news)
 }
 
-func runAPI() {
-	news = append(news, News{Title: "test news 0"})
-	news = append(news, News{Title: "test news 1"})
+func (agr Aggregator) searchNewsHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	news, err := agr.searchNews(vars["search"])
+	if err != nil {
+		log.Println("error while searching news", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(news)
+}
 
+func runAPI(agr *Aggregator) {
 	router := mux.NewRouter()
-	router.HandleFunc("/getNews", getNews).Methods("GET")
+	router.HandleFunc("/getNews", agr.getNewsHandler).Methods("GET")
+	router.HandleFunc("/searchNews", agr.searchNewsHandler).Queries("search", "{search}").Methods("GET")
 	log.Fatal(http.ListenAndServe(":69", router))
 }
