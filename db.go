@@ -27,13 +27,13 @@ const (
 
 	SELECT_ALL_NEWS_QUERY = `
 		select id, title, link, description from news
-		order by id asc
+		order by id desc
 	`
 
 	SELECT_NEWS_BY_TITLE_QUERY = `
 		select id, title, link, description from news
 		where title LIKE '%' || ? || '%'
-		order by id asc
+		order by id desc
 	`
 )
 
