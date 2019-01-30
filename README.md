@@ -24,11 +24,13 @@ Config schema:
     ],  
     "html": [  
         {  
+            "host": "string",  
             "url": "string",  
             "interval": "number",  
             "article_selector": "string",  
             "title_selector": "string",  
-            "description_selector": "string"  
+            "description_selector": "string",  
+            "link_selector": "string"
         }  
     ]  
 }

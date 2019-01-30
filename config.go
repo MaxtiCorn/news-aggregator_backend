@@ -12,11 +12,13 @@ type RSSRule struct {
 }
 
 type HTMLRule struct {
+	Host				string `json:"host"`
 	URL                 string `json:"url"`
 	Interval            int    `json:"interval"`
 	ArticleSelector     string `json:"article_selector"`
 	TitleSelector       string `json:"title_selector"`
 	DescriptionSelector string `json:"description_selector"`
+	LinkSelector 		string `json:"link_selector"`
 }
 
 type Config struct {
