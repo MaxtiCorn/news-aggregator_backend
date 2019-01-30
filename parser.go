@@ -7,6 +7,14 @@ import (
 	"github.com/mmcdole/gofeed"
 )
 
+func formatLink(link, host string) string {
+	if !strings.Contains(link, "http") {
+		return host + link
+	} else {
+		return link
+	}
+}
+
 func parseHTML(rule HTMLRule, newsChan chan<- News) {
 	log.Println("getting news from", rule.URL)
 
@@ -20,12 +28,10 @@ func parseHTML(rule HTMLRule, newsChan chan<- News) {
 	doc.Find(rule.ArticleSelector).Each(func(_ int, s *goquery.Selection) {
 		news.Title = s.Find(rule.TitleSelector).Text()
 		news.Description = s.Find(rule.DescriptionSelector).Text()
-		if link, ok := s.Find(rule.LinkSelector).Attr("href"); ok {
-			if !strings.Contains(link, "http") {
-				news.Link = rule.Host + link
-			} else {
-				news.Link = link
-			}
+		if link, ok := s.Attr("href"); rule.LinkSelector == "self" && ok {
+			news.Link = formatLink(link, rule.Host)
+		} else if link, ok := s.Find(rule.LinkSelector).Attr("href"); ok {
+			news.Link = formatLink(link, rule.Host)
 		}
 		
 		newsChan <- news
