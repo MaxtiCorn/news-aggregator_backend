@@ -12,20 +12,21 @@ where path_to_config_file is path to json file with parsing rules (default: conf
       path_to_database_file is path to database (default: database.db located in the same directory as the exe file)  
 
 Config schema:  
+```json
 {  
-    "rss": [                                    *list of parsing rules for rss*  
+    "rss": [  
         {  
-            "url": string,                      *url of rss*  
-            "interval": number                  *polling interval in seconds*  
+            "url": "string",  
+            "interval": "number"  
         }  
     ],  
-    "html": [                                   *list of parsing rules for sites*  
+    "html": [  
         {  
-            "url": string,                      *url of site*  
-            "interval": number,                 *polling interval in seconds*  
-            "article_selector": string,         *selector for find article*  
-            "title_selector": string,           *selector for find title in article*  
-            "description_selector": string      *selector for find description in article*  
+            "url": "string",  
+            "interval": "number",  
+            "article_selector": "string",  
+            "title_selector": "string",  
+            "description_selector": "string"  
         }  
     ]  
-}
+}```
