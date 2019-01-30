@@ -46,17 +46,17 @@ func newDatabase(path string) (*sql.DB, error) {
 	createQueries := []string{CREATE_TABLE_NEWS_QUERY, CREATE_INDEX_QUERY}
 
 	for _, createQuery := range createQueries {
-		stmt, err := db.Prepare(createQuery)
+		statement, err := db.Prepare(createQuery)
 		if err != nil {
 			return nil, err
 		}
 
-		_, err = stmt.Exec()
+		_, err = statement.Exec()
 		if err != nil {
 			return nil, err
 		}
 
-		stmt.Close()
+		statement.Close()
 	}
 
 	return db, nil
@@ -115,12 +115,12 @@ func (agr Aggregator) saveNews(news *News) error {
 }
 
 func (agr Aggregator) getAllNews() ([]News, error) {
-	stmt, err := agr.db.Prepare(SELECT_ALL_NEWS_QUERY)
+	statement, err := agr.db.Prepare(SELECT_ALL_NEWS_QUERY)
 	if err != nil {
 		return nil, err
 	}
 
-	rows, err := stmt.Query()
+	rows, err := statement.Query()
 	if err != nil {
 		return nil, err
 	}
@@ -142,12 +142,12 @@ func (agr Aggregator) getAllNews() ([]News, error) {
 }
 
 func (agr Aggregator) searchNews(query string) ([]News, error) {
-	stmt, err := agr.db.Prepare(SELECT_NEWS_BY_TITLE_QUERY)
+	statement, err := agr.db.Prepare(SELECT_NEWS_BY_TITLE_QUERY)
 	if err != nil {
 		return nil, err
 	}
 
-	rows, err := stmt.Query(query)
+	rows, err := statement.Query(query)
 	if err != nil {
 		return nil, err
 	}
