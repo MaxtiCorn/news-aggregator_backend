@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	CREATE_TABLE_NEWS_QUERY = `
+	createTableNewsQuery = `
 		create table if not exists "news" (
 		"id" integer primary key autoincrement,
     	"title" text,
@@ -15,22 +15,22 @@ const (
     	"description" text
 	);`
 
-	CREATE_INDEX_QUERY = `
+	createIndexQuery = `
 		create index if not exists "news_title_index"
 		on news(title);
 	`
 
-	INSERT_NEWS_QUERY = `
+	insertNewsQuery = `
 		insert or ignore into news(title, link, description) 
 		values(?,?,?);
 	`
 
-	SELECT_ALL_NEWS_QUERY = `
+	selectAllNewsQuery = `
 		select id, title, link, description from news
 		order by id desc
 	`
 
-	SELECT_NEWS_BY_TITLE_QUERY = `
+	selectNewsByTitleQuery = `
 		select id, title, link, description from news
 		where title LIKE '%' || ? || '%'
 		order by id desc
@@ -43,7 +43,7 @@ func newDatabase(path string) (*sql.DB, error) {
 		return nil, err
 	}
 
-	createQueries := []string{CREATE_TABLE_NEWS_QUERY, CREATE_INDEX_QUERY}
+	createQueries := []string{createTableNewsQuery, createIndexQuery}
 
 	for _, createQuery := range createQueries {
 		statement, err := db.Prepare(createQuery)
@@ -89,7 +89,7 @@ func execQueryInTransaction(transaction *sql.Tx, query string, values []interfac
 func insertNews(transaction *sql.Tx, news *News) (err error) {
 	err = execQueryInTransaction(
 		transaction,
-		INSERT_NEWS_QUERY,
+		insertNewsQuery,
 		[]interface{}{news.Title, news.Link, news.Description})
 
 	return
@@ -115,7 +115,7 @@ func (agr Aggregator) saveNews(news *News) error {
 }
 
 func (agr Aggregator) getAllNews() ([]News, error) {
-	statement, err := agr.db.Prepare(SELECT_ALL_NEWS_QUERY)
+	statement, err := agr.db.Prepare(selectAllNewsQuery)
 	if err != nil {
 		return nil, err
 	}
@@ -142,7 +142,7 @@ func (agr Aggregator) getAllNews() ([]News, error) {
 }
 
 func (agr Aggregator) searchNews(query string) ([]News, error) {
-	statement, err := agr.db.Prepare(SELECT_NEWS_BY_TITLE_QUERY)
+	statement, err := agr.db.Prepare(selectNewsByTitleQuery)
 	if err != nil {
 		return nil, err
 	}
