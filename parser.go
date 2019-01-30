@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"strings"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/mmcdole/gofeed"
 )
@@ -18,7 +19,11 @@ func parseHTML(rule HTMLRule, newsChan chan<- News) {
 	news := News{}
 	doc.Find(rule.ArticleSelector).Each(func(_ int, s *goquery.Selection) {
 		if link, ok := s.Find("a").Attr("href"); ok {
-			news.Link = rule.URL + link
+			if !strings.Contains(link, "http") {
+				news.Link = rule.URL + link
+			} else {
+				news.Link = link
+			}
 		}
 		news.Title = s.Find(rule.TitleSelector).Text()
 		news.Description = s.Find(rule.DescriptionSelector).Text()
