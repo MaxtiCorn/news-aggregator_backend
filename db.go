@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	newsSchema = `
+	CREATE_TABLE_NEWS_QUERY = `
 		create table if not exists "news" (
 		"id" integer primary key autoincrement,
     	"title" text,
@@ -15,22 +15,22 @@ const (
     	"description" text
 	);`
 
-	index = `
+	CREATE_INDEX_QUERY = `
 		create index if not exists "news_title_index"
 		on news(title);
 	`
 
-	newsInsertQuery = `
+	INSERT_NEWS_QUERY = `
 		insert or ignore into news(title, link, description) 
 		values(?,?,?);
 	`
 
-	getAllNewsQuery = `
+	SELECT_ALL_NEWS_QUERY = `
 		select id, title, link, description from news
 		order by id asc
 	`
 
-	newsFindQuery = `
+	SELECT_NEWS_BY_TITLE_QUERY = `
 		select id, title, link, description from news
 		where title LIKE '%' || ? || '%'
 		order by id asc
@@ -43,10 +43,10 @@ func newDatabase(path string) (*sql.DB, error) {
 		return nil, err
 	}
 
-	schemas := []string{newsSchema, index}
+	createQueries := []string{CREATE_TABLE_NEWS_QUERY, CREATE_INDEX_QUERY}
 
-	for _, schema := range schemas {
-		stmt, err := db.Prepare(schema)
+	for _, createQuery := range createQueries {
+		stmt, err := db.Prepare(createQuery)
 		if err != nil {
 			return nil, err
 		}
@@ -89,7 +89,7 @@ func execQueryInTransaction(transaction *sql.Tx, query string, values []interfac
 func insertNews(transaction *sql.Tx, news *News) (err error) {
 	err = execQueryInTransaction(
 		transaction,
-		newsInsertQuery,
+		INSERT_NEWS_QUERY,
 		[]interface{}{news.Title, news.Link, news.Description})
 
 	return
@@ -115,7 +115,7 @@ func (agr Aggregator) saveNews(news *News) error {
 }
 
 func (agr Aggregator) getAllNews() ([]News, error) {
-	stmt, err := agr.db.Prepare(getAllNewsQuery)
+	stmt, err := agr.db.Prepare(SELECT_ALL_NEWS_QUERY)
 	if err != nil {
 		return nil, err
 	}
@@ -142,7 +142,7 @@ func (agr Aggregator) getAllNews() ([]News, error) {
 }
 
 func (agr Aggregator) searchNews(query string) ([]News, error) {
-	stmt, err := agr.db.Prepare(newsFindQuery)
+	stmt, err := agr.db.Prepare(SELECT_NEWS_BY_TITLE_QUERY)
 	if err != nil {
 		return nil, err
 	}
