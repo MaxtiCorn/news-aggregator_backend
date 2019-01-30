@@ -33,9 +33,9 @@ func (agr Aggregator) searchNewsHandler(w http.ResponseWriter, r *http.Request) 
 	json.NewEncoder(w).Encode(news)
 }
 
-func runAPI(agr *Aggregator) {
+func runAPI(agr *Aggregator, port string) {
 	router := mux.NewRouter()
 	router.HandleFunc("/getNews", agr.getNewsHandler).Methods("GET")
 	router.HandleFunc("/searchNews", agr.searchNewsHandler).Queries("search", "{search}").Methods("GET")
-	log.Fatal(http.ListenAndServe(":69", router))
+	log.Fatal(http.ListenAndServe(":" + port, router))
 }
