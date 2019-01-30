@@ -35,3 +35,11 @@ Config schema:
     ]  
 }
 ```
+
+where *host* is root of site  
+*url* is url of page with feed  
+*interval* is polling interval  
+*article_selector* is css selector to find element with article in html  
+*title_selector* is css selector to find title in article  
+*description_selector* is css selector to find description in article  
+*link_selector* is css selector to find link in article or "self" if article is link
