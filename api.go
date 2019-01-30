@@ -12,6 +12,7 @@ func (agr Aggregator) getNewsHandler(w http.ResponseWriter, r *http.Request) {
 	news, err := agr.getAllNews()
 	if err != nil {
 		log.Println("error while getting all news", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -25,6 +26,7 @@ func (agr Aggregator) searchNewsHandler(w http.ResponseWriter, r *http.Request) 
 	news, err := agr.searchNews(vars["search"])
 	if err != nil {
 		log.Println("error while searching news", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Access-Control-Allow-Origin", "*")
