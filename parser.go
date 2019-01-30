@@ -10,9 +10,8 @@ import (
 func formatLink(link, host string) string {
 	if !strings.Contains(link, "http") {
 		return host + link
-	} else {
-		return link
 	}
+	return link
 }
 
 func parseHTML(rule HTMLRule, newsChan chan<- News) {
