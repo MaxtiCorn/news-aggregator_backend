@@ -21,6 +21,6 @@ func main() {
 	log.Println("running aggregator")
 	aggregator.Run()
 
-	log.Println("running api", *port)
+	log.Println("running api on port", *port)
 	runAPI(aggregator, *port)
 }

@@ -27,10 +27,14 @@ func parseHTML(rule HTMLRule, newsChan chan<- News) {
 	doc.Find(rule.ArticleSelector).Each(func(_ int, s *goquery.Selection) {
 		news.Title = s.Find(rule.TitleSelector).Text()
 		news.Description = s.Find(rule.DescriptionSelector).Text()
+		host := rule.Host
+		if host == "" {
+			host = rule.URL
+		}
 		if link, ok := s.Attr("href"); rule.LinkSelector == "self" && ok {
-			news.Link = formatLink(link, rule.Host)
+			news.Link = formatLink(link, host)
 		} else if link, ok := s.Find(rule.LinkSelector).Attr("href"); ok {
-			news.Link = formatLink(link, rule.Host)
+			news.Link = formatLink(link, host)
 		}
 		
 		newsChan <- news
