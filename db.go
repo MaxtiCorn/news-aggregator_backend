@@ -43,8 +43,14 @@ const (
 	`
 
 	selectNewsByTitleQuery = `
-		select id, title, link, description from news
+		select id, title, link, source, description from news
 		where title LIKE '%' || ? || '%'
+		order by id desc
+	`
+
+	selectNewsBySourceQuery = `
+		select id, title, link, source, description from news
+		where source = ?
 		order by id desc
 	`
 )
@@ -169,7 +175,34 @@ func (agr Aggregator) searchNews(query string) ([]News, error) {
 		var id int
 		var news News
 
-		if err := rows.Scan(&id, &news.Title, &news.Link, &news.Description); err != nil {
+		if err := rows.Scan(&id, &news.Title, &news.Link, &news.Source, &news.Description); err != nil {
+			return nil, err
+		}
+
+		foundNews = append(foundNews, news)
+	}
+
+	return foundNews, nil
+}
+
+func (agr Aggregator) getNewsBySource(source string) ([]News, error) {
+	statement, err := agr.db.Prepare(selectNewsBySourceQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := statement.Query(source)
+	if err != nil {
+		return nil, err
+	}
+
+	var foundNews []News = []News{}
+
+	for rows.Next() {
+		var id int
+		var news News
+
+		if err := rows.Scan(&id, &news.Title, &news.Link, &news.Source, &news.Description); err != nil {
 			return nil, err
 		}
 
