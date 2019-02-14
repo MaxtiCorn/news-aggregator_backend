@@ -21,6 +21,11 @@ const (
 		on news(title);
 	`
 
+	createIndexQuery = `
+		create index if not exists "news_source_index"
+		on news(source);
+	`
+
 	insertNewsQuery = `
 		insert or ignore into news(title, link, description) 
 		values(?,?,?);
