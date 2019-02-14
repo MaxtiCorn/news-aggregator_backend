@@ -16,12 +16,12 @@ const (
     	"description" text
 	);`
 
-	createIndexQuery = `
+	createTitleIndexQuery = `
 		create index if not exists "news_title_index"
 		on news(title);
 	`
 
-	createIndexQuery = `
+	createSourceIndexQuery = `
 		create index if not exists "news_source_index"
 		on news(source);
 	`
@@ -34,6 +34,12 @@ const (
 	selectAllNewsQuery = `
 		select id, title, link, description from news
 		order by id desc
+	`
+
+	selectNewsQuery = `
+		select id, title, link, description from news
+		order by id desc
+		limit ? offset ?
 	`
 
 	selectNewsByTitleQuery = `
@@ -49,7 +55,7 @@ func newDatabase(path string) (*sql.DB, error) {
 		return nil, err
 	}
 
-	createQueries := []string{createTableNewsQuery, createIndexQuery}
+	createQueries := []string{createTableNewsQuery, createTitleIndexQuery, createSourceIndexQuery}
 
 	for _, createQuery := range createQueries {
 		statement, err := db.Prepare(createQuery)
@@ -120,18 +126,18 @@ func (agr Aggregator) saveNews(news *News) error {
 	return nil
 }
 
-func (agr Aggregator) getAllNews() ([]News, error) {
-	statement, err := agr.db.Prepare(selectAllNewsQuery)
+func (agr Aggregator) getNews(count, offset string) ([]News, error) {
+	statement, err := agr.db.Prepare(selectNewsQuery)
 	if err != nil {
 		return nil, err
 	}
 
-	rows, err := statement.Query()
+	rows, err := statement.Query(count, offset)
 	if err != nil {
 		return nil, err
 	}
 
-	var foundNews []News
+	var foundNews []News = []News{}
 
 	for rows.Next() {
 		var id int
@@ -158,7 +164,7 @@ func (agr Aggregator) searchNews(query string) ([]News, error) {
 		return nil, err
 	}
 
-	var foundNews []News
+	var foundNews []News = []News{}
 
 	for rows.Next() {
 		var id int
