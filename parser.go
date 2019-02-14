@@ -25,6 +25,7 @@ func parseHTML(rule HTMLRule, newsChan chan<- News) {
 
 	news := News{}
 	doc.Find(rule.ArticleSelector).Each(func(_ int, s *goquery.Selection) {
+		news.Source = rule.Source
 		news.Title = s.Find(rule.TitleSelector).Text()
 		news.Description = s.Find(rule.DescriptionSelector).Text()
 		host := rule.Host
@@ -47,6 +48,7 @@ func parseRSS(rule RSSRule, newsChan chan<- News) {
 	feed, _ := fp.ParseURL(rule.URL)
 	news := News{}
 	for _, item := range feed.Items {
+		news.Source = rule.Source
 		news.Title = item.Title
 		news.Description = item.Description
 		news.Link = item.Link

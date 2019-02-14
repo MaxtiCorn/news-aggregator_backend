@@ -27,17 +27,17 @@ const (
 	`
 
 	insertNewsQuery = `
-		insert or ignore into news(title, link, description) 
-		values(?,?,?);
+		insert or ignore into news(title, link, source, description) 
+		values(?,?,?,?);
 	`
 
 	selectAllNewsQuery = `
-		select id, title, link, description from news
+		select id, title, link, source, description from news
 		order by id desc
 	`
 
 	selectNewsQuery = `
-		select id, title, link, description from news
+		select id, title, link, source, description from news
 		order by id desc
 		limit ? offset ?
 	`
@@ -102,8 +102,7 @@ func insertNews(transaction *sql.Tx, news *News) (err error) {
 	err = execQueryInTransaction(
 		transaction,
 		insertNewsQuery,
-		[]interface{}{news.Title, news.Link, news.Description})
-
+		[]interface{}{news.Title, news.Link, news.Source, news.Description})
 	return
 }
 
@@ -143,7 +142,7 @@ func (agr Aggregator) getNews(count, offset string) ([]News, error) {
 		var id int
 		var news News
 
-		if err := rows.Scan(&id, &news.Title, &news.Link, &news.Description); err != nil {
+		if err := rows.Scan(&id, &news.Title, &news.Link, &news.Source, &news.Description); err != nil {
 			return nil, err
 		}
 
