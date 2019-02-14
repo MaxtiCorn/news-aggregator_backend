@@ -35,14 +35,12 @@ func NewAggregator(dbPath, configPath string) (*Aggregator, error) {
 	db, err := newDatabase(dbPath)
 
 	if err != nil {
-		log.Println("error while database initialization:", err)
 		return nil, err
 	}
 
 	config, err := parseConfig(configPath)
 
 	if err != nil {
-		log.Println("error while parsing config file:", err)
 		return nil, err
 	}
 
