@@ -8,7 +8,7 @@ import (
 func main() {
 	dbPath := flag.String("db", "database.db", "path to database file")
 	configPath := flag.String("config", "config.json", "path to config file")
-	port := flag.String("port", "69", "port to run")
+	port := flag.String("port", "80", "port to run")
 	flag.Parse()
 
 	log.Println("creating aggregator")
