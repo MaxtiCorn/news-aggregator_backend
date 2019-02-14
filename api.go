@@ -9,6 +9,7 @@ import (
 )
 
 func (agr Aggregator) getNewsHandler(w http.ResponseWriter, r *http.Request) {
+	defer func() { recover() }()
 	vars := mux.Vars(r)
 	news, err := agr.getNews(vars["count"], vars["offset"])
 	if err != nil {
@@ -23,6 +24,7 @@ func (agr Aggregator) getNewsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (agr Aggregator) searchNewsHandler(w http.ResponseWriter, r *http.Request) {
+	defer func() { recover() }()
 	vars := mux.Vars(r)
 	news, err := agr.searchNews(vars["search"])
 	if err != nil {
@@ -37,6 +39,7 @@ func (agr Aggregator) searchNewsHandler(w http.ResponseWriter, r *http.Request) 
 }
 
 func (agr Aggregator) getNewsBySourceHandler(w http.ResponseWriter, r *http.Request) {
+	defer func() { recover() }()
 	vars := mux.Vars(r)
 	news, err := agr.getNewsBySource(vars["source"])
 	if err != nil {
