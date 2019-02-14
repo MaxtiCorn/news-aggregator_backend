@@ -3,6 +3,10 @@ package main
 import (
 	"flag"
 	"log"
+	"context"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
@@ -11,16 +15,30 @@ func main() {
 	port := flag.String("port", "80", "port to run")
 	flag.Parse()
 
-	log.Println("creating aggregator")
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
+	log.Println("create aggregator")
 	aggregator, err := NewAggregator(*dbPath, *configPath)
 	if err != nil {
 		log.Println("error while creating aggregator", err)
 		return
 	}
 
-	log.Println("running aggregator")
-	aggregator.Run()
+	ctx, cancel := context.WithCancel(context.Background())
 
-	log.Println("running api on port", *port)
-	runAPI(aggregator, *port)
+	log.Println("run aggregator")
+	aggregator.Run(ctx)
+
+	log.Println("run api on port", *port)
+	go runAPI(aggregator, *port)
+
+	log.Println("work..")
+
+	select {
+	case <-ctx.Done():
+		cancel()
+	case <-sigs:
+		cancel()
+	}
 }

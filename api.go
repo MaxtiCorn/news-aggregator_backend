@@ -10,7 +10,6 @@ import (
 
 func (agr Aggregator) getNewsHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	log.Println(vars["count"], vars["offset"])
 	news, err := agr.getNews(vars["count"], vars["offset"])
 	if err != nil {
 		log.Println("error while getting news", err)
