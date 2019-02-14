@@ -11,7 +11,8 @@ const (
 		create table if not exists "news" (
 		"id" integer primary key autoincrement,
     	"title" text,
-    	"link" varchar(64) unique,
+		"link" varchar(64),
+		"source" varchar (64),
     	"description" text
 	);`
 
