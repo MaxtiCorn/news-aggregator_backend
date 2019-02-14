@@ -7,11 +7,13 @@ import (
 )
 
 type RSSRule struct {
+	Source   string `json:"source"`
 	URL      string `json:"url"`
 	Interval int    `json:"interval"`
 }
 
 type HTMLRule struct {
+	Source              string `json:"source"`
 	Host				string `json:"host"`
 	URL                 string `json:"url"`
 	Interval            int    `json:"interval"`

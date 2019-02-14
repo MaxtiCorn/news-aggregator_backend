@@ -18,12 +18,14 @@ Config schema:
 {  
     "rss": [  
         {  
+            "source": "string",
             "url": "string",  
             "interval": "number"  
         }  
     ],  
     "html": [  
         {  
+            "source": "string",
             "host": "string",  
             "url": "string",  
             "interval": "number",  
